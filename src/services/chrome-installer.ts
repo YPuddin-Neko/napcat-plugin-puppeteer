@@ -1850,6 +1850,11 @@ export function isInstallingChrome(): boolean {
  * 获取默认安装路径
  */
 export function getDefaultInstallPath(): string {
+    // 优先存放在插件自身持久化的 dataPath 目录中（Docker 环境下通常已挂载）
+    if (pluginState.dataPath) {
+        return path.join(pluginState.dataPath, 'chrome');
+    }
+
     const platform = os.platform();
     if (platform === 'win32') {
         return path.join(process.env.LOCALAPPDATA || 'C:\\', 'puppeteer', 'chrome');
